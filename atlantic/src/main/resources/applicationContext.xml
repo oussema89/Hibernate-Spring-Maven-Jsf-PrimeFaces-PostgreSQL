@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/atlantic" />
+		<property name="username" value="postgres" />
+		<property name="password" value="admin" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.sogeti.atlantic.model.Document</value>
+				<value>com.sogeti.atlantic.model.GenericTAA</value>
+				<value>com.sogeti.atlantic.model.SpecificTAA</value>
+				<value>com.sogeti.atlantic.model.TAA</value>
+				<value>com.sogeti.atlantic.model.User</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+
+	</bean>
+
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<bean id="documentService" class="com.sogeti.atlantic.service.DocumentServiceImpl">
+		<property name="documentDao">
+			<ref bean="documentDao" />
+		</property>
+	</bean>
+
+	<bean id="documentDao" class="com.sogeti.atlantic.dao.DocumentDaoImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="genericTAAService" class="com.sogeti.atlantic.service.GenericTAAServiceImpl">
+		<property name="genericTAADao">
+			<ref bean="genericTAADao" />
+		</property>
+	</bean>
+
+	<bean id="genericTAADao" class="com.sogeti.atlantic.dao.GenericTAADaoImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="specificTAAService" class="com.sogeti.atlantic.service.SpecificTAAServiceImpl">
+		<property name="specificTAADao">
+			<ref bean="specificTAADao" />
+		</property>
+	</bean>
+
+	<bean id="specificTAADao" class="com.sogeti.atlantic.dao.SpecificTAADaoImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="taaService" class="com.sogeti.atlantic.service.TAAServiceImpl">
+		<property name="taaDao">
+			<ref bean="taaDao" />
+		</property>
+	</bean>
+
+	<bean id="taaDao" class="com.sogeti.atlantic.dao.TAADaoImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="userService" class="com.sogeti.atlantic.service.UserServiceImpl">
+		<property name="userDao">
+			<ref bean="userDao" />
+		</property>
+	</bean>
+
+	<bean id="userDao" class="com.sogeti.atlantic.dao.UserDaoImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+</beans>
