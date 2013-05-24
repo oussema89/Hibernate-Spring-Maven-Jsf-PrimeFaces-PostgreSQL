@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+	<h:head>
+		<f:facet name="first">
+			<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+			<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+			<title>Atlantic - Example</title>
+		</f:facet>
+
+		<link type="text/css" rel="stylesheet"
+			href="#{request.contextPath}/css/default.css" />
+		<link type="text/css" rel="stylesheet"
+			href="#{request.contextPath}/css/syntaxhighlighter.css" />
+
+		<style type="text/css">
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+</style>
+	</h:head>
+
+	<h:body>
+		<p:layout fullPage="true">
+			<p:layoutUnit id="top" position="north" size="70">
+				<p:lightBox style="text-align:left;margin-top:5px;">
+					<h:outputLink value="http://www.astrium.eads.net/fr/"
+						title="Astrium">
+						<h:graphicImage value="/images/logo.jpg" width="110" height="24" />
+					</h:outputLink>
+				</p:lightBox>
+				<p:menubar>
+					<p:submenu label="TAA" icon="ui-icon-document">
+						<p:menuitem value="New" url="#" />
+						<p:menuitem value="Generate Licence" url="#" />
+						<p:menuitem value="Import" url="#" />
+					</p:submenu>
+
+					<p:submenu label="DSP5" icon="ui-icon-document">
+						<p:menuitem value="New" url="#"></p:menuitem>
+						<p:menuitem value="View List" url="#"></p:menuitem>
+					</p:submenu>
+
+					<p:submenu label="Programs" icon="ui-icon-document">
+						<p:menuitem value="New" url="#"></p:menuitem>
+						<p:menuitem value="Launch for GC" url="#"></p:menuitem>
+					</p:submenu>
+
+					<p:submenu label="Help" icon="ui-icon-help">
+						<p:menuitem value="About" url="#" />
+						<p:submenu label="Search" icon="ui-icon-search">
+							<p:menuitem value="TAA" url="#" />
+							<p:menuitem value="DSP5" url="#" />
+							<p:menuitem value="Program" url="#" />
+						</p:submenu>
+					</p:submenu>
+				</p:menubar>
+			</p:layoutUnit>
+			
+			<p:layoutUnit id="left" position="west" size="300" resizable="true"
+				closable="true" collapsible="true" header="@tlantic Board"
+				minSize="200">
+				<p:accordionPanel>
+					<p:tab title="TAA Board Management">
+						<h:outputLink value="#">Create</h:outputLink>
+						<br />
+						<h:outputLink value="#">View List</h:outputLink>
+					</p:tab>
+
+					<p:tab title="Programs Board Management">
+						<h:outputLink value="#">Create</h:outputLink>
+						<br />
+						<h:outputLink value="#">View List</h:outputLink>
+					</p:tab>
+
+					<p:tab title="DSP5 Board Management">
+						<h:outputLink value="#">Create</h:outputLink>
+						<br />
+						<h:outputLink value="#">View List</h:outputLink>
+					</p:tab>
+				</p:accordionPanel>
+			</p:layoutUnit>
+
+			<p:layoutUnit id="center" position="center">
+				<h:form id="form">
+					<br />
+					<h2 style="font-weight: bold" align="center">Specific TAA</h2>
+					<br />
+					<p:growl id="msgs" showDetail="true" />
+					<p:dataTable id="specificTAATable" var="specificTAA" paginator="true" rows="5"
+						value="#{board.specificTAAs}">
+						<p:column headerText="LicenseNumber" sortBy="#{specificTAA.licenseNumber}">
+							<h:outputText value="#{specificTAA.licenseNumber}" />
+						</p:column>
+						<p:column headerText="VersionNumber" sortBy="#{specificTAA.versionNumber}">
+							<h:outputText value="#{specificTAA.versionNumber}" />
+						</p:column>
+						<p:column headerText="Subject" sortBy="#{specificTAA.subject}">
+							<h:outputText value="#{specificTAA.subject}" />
+						</p:column>
+						<p:column headerText="Draft" sortBy="#{specificTAA.draft}">
+							<h:outputText value="#{specificTAA.draft}" />
+						</p:column>
+						<p:column headerText="SubmissionToDoS" sortBy="#{specificTAA.submissionToDoS}">
+							<h:outputText value="#{specificTAA.submissionToDoS}" />
+						</p:column>
+						<p:column headerText="ApprovedByDos" sortBy="#{specificTAA.approvedByDos}">
+							<h:outputText value="#{specificTAA.approvedByDos}" />
+						</p:column>
+						<p:column headerText="FullyExecuted" sortBy="#{specificTAA.fullyExecuted}">
+							<h:outputText value="#{specificTAA.fullyExecuted}" />
+						</p:column>
+						<p:column style="width:4%">
+							<p:commandButton id="selectButtonSpecificTAA"
+								update=":form:displaySpeTAA" oncomplete="specificTAAEdit.show()"
+								icon="ui-icon-search" title="Edit">
+								<f:setPropertyActionListener value="#{specificTAA}"
+									target="#{board.specificTAAEdit}" />
+							</p:commandButton>
+						</p:column>
+						<p:column style="width:4%">
+							<f:facet name="header">
+								<h:outputText value="" />
+							</f:facet>
+							<p:commandButton icon="ui-icon-close" title="Remove from specificTAA"
+								actionListener="#{board.removeSpecificTAA(specificTAA)}" update="specificTAATable" />
+						</p:column>
+					</p:dataTable>
+					
+					<h:panelGrid columns="2">  
+						<p:panel header="Export All TAA">  
+							<h:commandLink>  
+								<p:graphicImage value="/images/excel.png" />  
+								<p:dataExporter type="xls" target="specificTAATable" fileName="All_Specific_TAA" />  
+							</h:commandLink>  
+					  
+							<h:commandLink>  
+								<p:graphicImage value="/images/pdf.png" />  
+								<p:dataExporter type="pdf" target="specificTAATable" fileName="All_Specific_TAA"/>  
+							</h:commandLink>  
+							  
+						</p:panel>  
+						  
+						<p:panel header="Export Current TAA">  
+							<h:commandLink>  
+								<p:graphicImage value="/images/excel.png" />  
+								<p:dataExporter type="xls" target="specificTAATable" fileName="Current_Specific_TAA" pageOnly="true"/>  
+							</h:commandLink>  
+					  
+							<h:commandLink>  
+								<p:graphicImage value="/images/pdf.png" />  
+								<p:dataExporter type="pdf" target="specificTAATable" fileName="Current_Specific_TAA" pageOnly="true"/>  
+							</h:commandLink>  
+						</p:panel>
+					</h:panelGrid>
+
+					<br />
+					<p:separator id="separator" />
+					<br />
+					<h2 style="font-weight: bold" align="center">Generic TAA</h2>
+					<br />
+
+					<p:dataTable id="genericTAATable" var="genericTAA" paginator="true" rows="5"
+						value="#{board.genericTAAs}">
+						<p:column headerText="LicenseNumber" sortBy="#{genericTAA.licenseNumber}">
+							<h:outputText value="#{genericTAA.licenseNumber}" />
+						</p:column>
+						<p:column headerText="VersionNumber" sortBy="#{genericTAA.versionNumber}">
+							<h:outputText value="#{genericTAA.versionNumber}" />
+						</p:column>
+						<p:column headerText="Subject" sortBy="#{genericTAA.subject}">
+							<h:outputText value="#{genericTAA.subject}" />
+						</p:column>
+
+						<p:column headerText="GcCOMSATStaffedToDoS" sortBy="#{genericTAA.gcCOMSATStaffedToDoS}">
+							<h:outputText value="#{genericTAA.gcCOMSATStaffedToDoS}" />
+						</p:column>
+						<p:column headerText="GcCOMSATApproval" sortBy="#{genericTAA.gcCOMSATApproval}">
+							<h:outputText value="#{genericTAA.gcCOMSATApproval}" />
+						</p:column>
+						<p:column style="width:4%">
+							<p:commandButton id="selectButtonGenericTAA"
+								update=":form:displayGenTAA" oncomplete="genericTAAEdit.show()"
+								icon="ui-icon-search" title="Edit">
+								<f:setPropertyActionListener value="#{genericTAA}"
+									target="#{board.genericTAAEdit}" />
+							</p:commandButton>
+						</p:column>
+						<p:column style="width:4%">
+							<f:facet name="header">
+								<h:outputText value="" />
+							</f:facet>
+							<p:commandButton icon="ui-icon-close" title="Remove from genericTAA"
+								actionListener="#{board.removeGenericTAA(genericTAA)}" update="genericTAATable" />
+						</p:column>
+					</p:dataTable>
+
+					<h:panelGrid columns="2">  
+						<p:panel header="Export All TAA">  
+							<h:commandLink>  
+								<p:graphicImage value="/images/excel.png" />  
+								<p:dataExporter type="xls" target="genericTAATable" fileName="All_Generic_TAA" />  
+							</h:commandLink>  
+					  
+							<h:commandLink>  
+								<p:graphicImage value="/images/pdf.png" />  
+								<p:dataExporter type="pdf" target="genericTAATable" fileName="All_Generic_TAA"/>  
+							</h:commandLink>  
+							  
+						</p:panel>  
+						  
+						<p:panel header="Export Current TAA">  
+							<h:commandLink>  
+								<p:graphicImage value="/images/excel.png" />  
+								<p:dataExporter type="xls" target="genericTAATable" fileName="Current_Generic_TAA" pageOnly="true"/>  
+							</h:commandLink>  
+					  
+							<h:commandLink>  
+								<p:graphicImage value="/images/pdf.png" />  
+								<p:dataExporter type="pdf" target="genericTAATable" fileName="Current_Generic_TAA" pageOnly="true"/>  
+							</h:commandLink>  
+						</p:panel>
+					</h:panelGrid>
+
+					<p:dialog header="Specific TAA Details" widgetVar="specificTAAEdit"
+						resizable="false" id="specificTAAEdit" showEffect="fade"
+						hideEffect="explode">
+						<h:panelGrid id="displaySpeTAA" columns="2" cellpadding="4"
+							style="margin:0 auto;">
+							<h:outputText value="LicenseNumber:" />
+							<h:outputText value="#{board.specificTAAEdit.licenseNumber}"
+								style="font-weight:bold" />
+							<h:outputText value="VersionNumber:" />
+							<h:outputText value="#{board.specificTAAEdit.versionNumber}"
+								style="font-weight:bold" />
+							<h:outputText value="Subject:" />
+							<h:outputText value="#{board.specificTAAEdit.subject}"
+								style="font-weight:bold" />
+							<h:outputText value="Draft:" />
+							<h:outputText value="#{board.specificTAAEdit.draft}"
+								style="font-weight:bold" />
+							<h:outputText value="SubmissionToDoS:" />
+							<h:outputText value="#{board.specificTAAEdit.submissionToDoS}"
+								style="font-weight:bold" />
+							<h:outputText value="ApprovedByDos:" />
+							<h:outputText value="#{board.specificTAAEdit.approvedByDos}"
+								style="font-weight:bold" />
+							<h:outputText value="FullyExecuted:" />
+							<h:outputText value="#{board.specificTAAEdit.fullyExecuted}"
+								style="font-weight:bold" />
+						</h:panelGrid>
+					</p:dialog>
+
+					<p:dialog header="Generic TAA Details" widgetVar="genericTAAEdit"
+						resizable="false" id="genericcTAAEdit" showEffect="fade"
+						hideEffect="explode">
+						<h:panelGrid id="displayGenTAA" columns="2" cellpadding="4"
+							style="margin:0 auto;">
+							<h:outputText value="LicenseNumber:" />
+							<h:outputText value="#{board.genericTAAEdit.licenseNumber}"
+								style="font-weight:bold" />
+							<h:outputText value="VersionNumber:" />
+							<h:outputText value="#{board.genericTAAEdit.versionNumber}"
+								style="font-weight:bold" />
+							<h:outputText value="Subject:" />
+							<h:outputText value="#{board.genericTAAEdit.subject}"
+								style="font-weight:bold" />
+							<h:outputText value="GcCOMSATStaffedToDoS:" />
+							<h:outputText
+								value="#{board.genericTAAEdit.gcCOMSATStaffedToDoS}"
+								style="font-weight:bold" />
+							<h:outputText value="GcCOMSATApproval:" />
+							<h:outputText value="#{board.genericTAAEdit.gcCOMSATApproval}"
+								style="font-weight:bold" />
+						</h:panelGrid>
+					</p:dialog>
+
+				</h:form>
+			</p:layoutUnit>
+		</p:layout>
+	</h:body>
+</f:view>
+</html>
